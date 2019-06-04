@@ -11,8 +11,8 @@ server.use(bodyParser.urlencoded({
     extended: true
 }));
 server.use(bodyParser.json());
-
-server.get('/', (req, res) = > res.send('page'));
+let frontend = '<h1>page</h1>';
+server.get('/', (req, res) = > res.send(frontend));
 
 server.post('/parking_bot', (request, response) = > {
     const agent = new WebhookClient({request, response});
@@ -37,5 +37,4 @@ intentMap.set('Default Welcome Intent', welcome);
 intentMap.set('Default Fallback Intent', fallback);
 intentMap.set('parkingslot.free', answer);
 agent.handleRequest(intentMap);
-})
-;
+});
