@@ -1,0 +1,24 @@
+{
+  "name": "parkingslot",
+  "version": "1.0.0",
+  "description": "Node Fulfillment for Parking Slot Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Siegi96/parkingslot.git"
+  },
+  "author": "Katharina Fluch, Michael Sieghartsleitner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Siegi96/parkingslot/issues"
+  },
+  "homepage": "https://github.com/Siegi96/parkingslot#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dialogflow-fulfillment": "^0.6.1",
+    "express": "^4.17.1"
+  }
+}
