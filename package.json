@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/Siegi96/parkingslot#readme",
   "dependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.4",
     "body-parser": "^1.19.0",
     "dialogflow-fulfillment": "^0.6.1",
     "express": "^4.17.1",
