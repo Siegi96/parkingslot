@@ -39,3 +39,4 @@ intentMap.set('Default Fallback Intent', fallback);
 intentMap.set('parkingslot.free', answer);
 agent.handleRequest(intentMap);
 });
+server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
