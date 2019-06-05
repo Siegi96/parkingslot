@@ -12,9 +12,10 @@ server.use(bodyParser.urlencoded({
 }));
 server.use(bodyParser.json());
 let frontend = '<h1>page</h1>';
-server.get('/', (req, res) = > res.send(frontend));
+server.get('/', (req, res) => res.send(frontend));
 
-server.post('/parking_bot', (request, response) = > {
+server.post('/parking_bot', (request, response) => {
+
     const agent = new WebhookClient({request, response});
 console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
 console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
