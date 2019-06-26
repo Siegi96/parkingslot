@@ -10,11 +10,11 @@ let client  = mqtt.connect('mqtt://iot.eclipse.org')
 client.on('connect', function () {
     client.subscribe('S1810629011A/outTopic', function (err) {
         console.log("subscribtion");
-        if (!err) {
+        // if (!err) {
             client.publish('S1810629011A/inTopic', 'Connection working')
-        }
+        // }
     })
-})
+});
 
 
 const server = express();
@@ -32,29 +32,42 @@ server.get('/', (req, res) => res.send(frontend));
 server.post('/parking_bot', (request, response) => {
 
     const agent = new WebhookClient({request, response});
-console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
-console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
+// console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
+// console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
 function welcome(agent) {
     agent.add(`Willkommen zum Parking Bot!`);
 }
 
 function fallback(agent) {
+
     agent.add(`Ich konnte dich nicht verstehen`);
     // agent.add(`I'm sorry, can you try again?`);
 }
 
 function answer(agent) {
-    agent.add("test");
+    let temp = new Promise(function(resolve, reject) {
+        client.publish('S1810629011A/inTopic', 'Message sent from node');
+        client.on('message', function (topic, message) {
+            // message is Buffer
 
-    client.on('message', function (topic, message) {
-        // message is Buffer
+            console.log("message: " + message.toString());
 
-        console.log("message: " + message.toString());
-        client.publish('S1810629011A/inTopic', 'Message sent from node')
-        agent.add(message.toString());
+            resolve(message.toString());
+            // client.publish('S1810629011A/inTopic', 'Message sent from node')
 
+        })
+
+
+    });
+    return temp.then( response =>{
+        console.log("success");
+        agent.add(response);
     })
+        .catch(res =>{
+            console.log("Error:" + res);
+            agent.add(res);
+        });
 
 }
 
@@ -64,7 +77,6 @@ intentMap.set('Default Fallback Intent', fallback);
 intentMap.set('parkingslot.free', answer);
 agent.handleRequest(intentMap);
 });
-
 
 
 
