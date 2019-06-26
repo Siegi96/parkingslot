@@ -3,13 +3,28 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const PORT = process.env.PORT || 5000;
 const {WebhookClient} = require('dialogflow-fulfillment');
-const {Card, Suggestion} = require('dialogflow-fulfillment');
+
+let mqtt = require('mqtt')
+let client  = mqtt.connect('mqtt://iot.eclipse.org')
+
+client.on('connect', function () {
+    client.subscribe('S1810629011A/outTopic', function (err) {
+        console.log("subscribtion");
+        if (!err) {
+            client.publish('S1810629011A/inTopic', 'Connection working')
+        }
+    })
+})
+
 
 const server = express();
 server.use(express.static(path.join(__dirname, 'public')));
 server.use(bodyParser.urlencoded({
     extended: true
 }));
+
+
+
 server.use(bodyParser.json());
 let frontend = '<h1>page</h1>';
 server.get('/', (req, res) => res.send(frontend));
@@ -30,7 +45,16 @@ function fallback(agent) {
 }
 
 function answer(agent) {
-    agent.add('Antwort von Node');
+
+    client.on('message', function (topic, message) {
+        // message is Buffer
+
+        console.log("message: " + message.toString());
+        client.publish('S1810629011A/inTopic', 'Message sent from node')
+        agent.add(message.toString());
+
+    })
+
 }
 
 let intentMap = new Map();
@@ -39,4 +63,9 @@ intentMap.set('Default Fallback Intent', fallback);
 intentMap.set('parkingslot.free', answer);
 agent.handleRequest(intentMap);
 });
+
+
+
+
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
