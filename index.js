@@ -26,7 +26,15 @@ server.use(bodyParser.urlencoded({
 
 
 server.use(bodyParser.json());
-let frontend = '<h1>page</h1>';
+
+
+let widget = "<iframe\n" +
+    "    allow=\"microphone;\"\n" +
+    "    width=\"350\"\n" +
+    "    height=\"430\"\n" +
+    "    src=\"https://console.dialogflow.com/api-client/demo/embedded/e6e26c9d-f57a-48a5-b7df-1482c544691e\">\n" +
+    "</iframe>";
+let frontend = '<h1>page</h1>' + widget;
 server.get('/', (req, res) => res.send(frontend));
 
 server.post('/parking_bot', (request, response) => {
