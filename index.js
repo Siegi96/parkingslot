@@ -45,6 +45,7 @@ function fallback(agent) {
 }
 
 function answer(agent) {
+    agent.add("test");
 
     client.on('message', function (topic, message) {
         // message is Buffer
