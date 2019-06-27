@@ -96,7 +96,6 @@ function answerTemperature(agent) {
         });
         return parking.then( response =>{
             console.log("success" + response);
-            const result = response === "true" ? "frei." : "besetzt.";
             agent.add("Der Parkplatz ist " + response);
         })
             .catch(res =>{
