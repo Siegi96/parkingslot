@@ -8,10 +8,10 @@ let mqtt = require('mqtt')
 let client  = mqtt.connect('mqtt://iot.eclipse.org')
 
 client.on('connect', function () {
-    client.subscribe('S1810629011A/outTopic', function (err) {
+    client.subscribe('S1810629011A/sendTemp', function (err) {
         console.log("subscribtion");
         // if (!err) {
-            client.publish('S1810629011A/inTopic', 'Connection working')
+        //     client.publish('S1810629011A/inTopic', 'Connection working')
         // }
     })
 });
@@ -53,9 +53,9 @@ function fallback(agent) {
     // agent.add(`I'm sorry, can you try again?`);
 }
 
-function answer(agent) {
+function answerTemperature(agent) {
     let temp = new Promise(function(resolve, reject) {
-        client.publish('S1810629011A/inTopic', 'Message sent from node');
+        client.publish('S1810629011A/getTemp', 'Message sent from node');
         client.on('message', function (topic, message) {
             // message is Buffer
 
@@ -70,22 +70,41 @@ function answer(agent) {
     });
     return temp.then( response =>{
         console.log("success");
-        agent.add(response);
+        agent.add("Es hat ca " + response + "Grad");
     })
         .catch(res =>{
             console.log("Error:" + res);
             agent.add(res);
         });
-
 }
+
+    function answerParkingslot(agent) {
+        let parking = new Promise(function(resolve, reject) {
+            client.publish('S1810629011A/getParkingslot', 'Message sent from node to get parking');
+            client.on('message', function (topic, message) {
+                // message is Buffer
+                console.log("message: " + message.toString());
+                resolve(message);
+            })
+        });
+        return parking.then( response =>{
+            console.log("success");
+            agent.add("Frei: " + response);
+        })
+            .catch(res =>{
+                console.log("Error:" + res);
+                agent.add(res);
+            });
+
+    }
 
 let intentMap = new Map();
 intentMap.set('Default Welcome Intent', welcome);
 intentMap.set('Default Fallback Intent', fallback);
-intentMap.set('parkingslot.free', answer);
+intentMap.set('parkingslot.free', answerParkingslot);
+intentMap.set('temperature', answerTemperature);
 agent.handleRequest(intentMap);
 });
-
 
 
 server.listen(PORT, () => console.log(`Listening on ${ PORT }`));
