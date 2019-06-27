@@ -14,6 +14,14 @@ client.on('connect', function () {
         //     client.publish('S1810629011A/inTopic', 'Connection working')
         // }
     })
+    client.subscribe('S1810629011A/sendParkingslot', function (err) {
+        console.log("subscribtion parking");
+        // if (!err) {
+        //     client.publish('S1810629011A/inTopic', 'Connection working')
+        // }
+    })
+
+
 });
 
 
@@ -70,7 +78,7 @@ function answerTemperature(agent) {
     });
     return temp.then( response =>{
         console.log("success");
-        agent.add("Es hat ca " + response + "Grad");
+        agent.add("Es hat ca " + response + " Grad");
     })
         .catch(res =>{
             console.log("Error:" + res);
@@ -82,14 +90,14 @@ function answerTemperature(agent) {
         let parking = new Promise(function(resolve, reject) {
             client.publish('S1810629011A/getParkingslot', 'Message sent from node to get parking');
             client.on('message', function (topic, message) {
-                // message is Buffer
                 console.log("message: " + message.toString());
                 resolve(message);
             })
         });
         return parking.then( response =>{
-            console.log("success");
-            agent.add("Frei: " + response);
+            console.log("success" + response);
+            const result = response === "true" ? "frei." : "besetzt.";
+            agent.add("Der Parkplatz ist " + response);
         })
             .catch(res =>{
                 console.log("Error:" + res);
