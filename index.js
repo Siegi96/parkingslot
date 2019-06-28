@@ -58,7 +58,6 @@ function welcome(agent) {
 function fallback(agent) {
 
     agent.add(`Ich konnte dich nicht verstehen`);
-    // agent.add(`I'm sorry, can you try again?`);
 }
 
 function answerTemperature(agent) {
@@ -87,6 +86,7 @@ function answerTemperature(agent) {
 }
 
     function answerParkingslot(agent) {
+    console.log("in parking slot");
         let parking = new Promise(function(resolve, reject) {
             client.publish('S1810629011A/getParkingslot', 'Message sent from node to get parking');
             client.on('message', function (topic, message) {
